@@ -18,8 +18,23 @@
                 <tbody id="tabela">
                 </table>
 
-
-
+                <button type="button" id="addproduto" class="btn btn-dark">Adicionar</button>
+                <div class="produto mt-3 mb-3" id="produto">
+                    <form id="saveaddproduct">
+                        <div class="form-group">
+                            <label for="codigo">Codigo</label>
+                            <input type="text" class="form-control" id="codigo">
+                          </div>
+                          <div class="form-group">
+                            <label for="linha">Linha</label>
+                            <input type="text" class="form-control" id="linha">
+                        </div>
+                        <button type="submit" class="btn btn-dark mb-2">Salvar</button>
+                    </form>
+                    
+                    <button type="button" id="closeaddproduto" class="btn btn-dark">Cancelar</button>
+                </div>
+                
             <a href="classes/logout.php" class="btn btn-primary">Logout</a>
         </div>
         
@@ -33,6 +48,7 @@
      <script>
          //verificar login
     $(document).ready(function() {
+        $('#produto').hide();
         $('#content').hide();
         $.ajax({ 
                 url: 'classes/VerifyLogin.php', 
@@ -61,12 +77,65 @@
 			}
 		}
 	});
+    //habilitar adição
+    $( "#addproduto" ).click(function() {
+    $('#produto').show()
+    $('#addproduto').hide()
     });
+    //fechar edição
+    $( "#closeaddproduto" ).click(function() {
+    $('#produto').hide()
+    $('#addproduto').show()
+    });
+    //salvar produto
+    $('#saveaddproduct').submit(function(){ 	//Ao submeter formulário
+            var codigo=$('#codigo').val();	//Pega valor do campo email
+            var linha=$('#linha').val();	//Pega valor do campo senha
+        
+            $.ajax({			//Função AJAX
+                url:"classes/insert_product_bd.php",		//Arquivo php
+                type:"POST",				//Método de envio
+                data: "funcao=insert"+"&codigo="+codigo+"&linha="+linha,	//Dados
+                   success: function (result){			//Sucesso no AJAX
+                            if(result==true){		
+                                alert('produto adiconado co sucesso')			
+                                location.href='sistema_interno.html'	//Redireciona
+                            }else{
+                                console.log(result)
+                                //$('#errolog').show();		//Informa o erro
+                                alert('Erro ao adicionar produto')
+                            }
+                        }
+            })
+            return false;	//Evita que a página seja atualizada
+        })
 
 
-        $("#header").load('header.html');
-        $("#footer").load('footer.html');
-        //login
+    });
+    carregaDocumento("header.html", "#header");
+    carregaDocumento("footer.html", "#footer");
+        //$("#header").load('header.html');
+        //$("#footer").load('footer.html');
+        //$("#header").on('load','header.html');
+
+        function carregaDocumento(arquivo, target)
+    {
+        var el = document.querySelector(target);
+
+        //Se o elemento não existir então não requisita
+        if (!el) return;
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", arquivo, true);
+        xhr.onreadystatechange = function(){
+             if (xhr.readyState == 4 && xhr.status >= 200 && xhr.status < 300){
+                  el.innerHTML = xhr.responseText;
+             }
+        };
+
+        xhr.send(null);
+    }
+
         
         </script>
      
