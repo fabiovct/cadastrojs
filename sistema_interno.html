@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <script type='text/javascript' src='_js/jquery-3.3.1.js'></script>
+    <head >       
+        <div id="header"></div>
+    </head>
+
+    <body>
+        <div class="container" id="content">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Codigo</th>
+                        <th>Linha</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela">
+                </table>
+
+
+
+            <a href="classes/logout.php" class="btn btn-primary">Logout</a>
+        </div>
+        
+
+    </body>
+
+     <footer>
+        <div id="footer"></div>
+     </footer>
+
+     <script>
+         //verificar login
+    $(document).ready(function() {
+        $('#content').hide();
+        $.ajax({ 
+                url: 'classes/VerifyLogin.php', 
+                type: 'POST',
+                data: '',
+                //dataType: 'json', 
+                    success: function(data){
+                    if (data == true ) {
+                        $('#content').show();
+
+                    } else {
+                        location.href='index.html'
+                    }
+            }
+        })
+        //listar
+        $('#tabela').empty(); //Limpando a tabela
+	    $.ajax({
+		type:'post',		//Definimos o método HTTP usado
+		dataType: 'json',	//Definimos o tipo de retorno
+		url: 'classes/Produtos.php',//Definindo o arquivo onde serão buscados os dados
+		success: function(dados){
+			for(var i=0;dados.length>i;i++){
+				//Adicionando registros retornados na tabela
+				$('#tabela').append('<tr><td>'+dados[i].id_produto+'</td><td>'+dados[i].codigo+'</td><td>'+dados[i].Linha+'</td></tr>');
+			}
+		}
+	});
+    });
+
+
+        $("#header").load('header.html');
+        $("#footer").load('footer.html');
+        //login
+        
+        </script>
+     
+    
+</html>

@@ -50,11 +50,10 @@
                 data: "email="+login+"&password="+password,	//Dados
                    success: function (result){			//Sucesso no AJAX
                             if(result==1){					
-                                location.href='sistema_interno.php'	//Redireciona
+                                location.href='sistema_interno.html'	//Redireciona
                             }else{
                                 //$('#errolog').show();		//Informa o erro
-                                location.href='indexjs.html'
-                               
+                                location.href='index.html'
                             }
                         }
             })
