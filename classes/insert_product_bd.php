@@ -1,23 +1,21 @@
 <?php
-/*if($_POST['funcao']=='insert'){
-    insert();
-}else{
-    echo false;
-}*/
 switch ($_POST['funcao']) {
     case 'insert':
         insert();
         break;
-    case 1:
-        echo "i equals 1";
+    case 'delete':
+        delete();
         break;
-    case 2:
-        echo "i equals 2";
+    case 'selectbyid':
+        selectbyid();
+        break;
+    case 'selectbyid':
+        edit();
         break;
 }
 
 function insert(){
-        include 'Conection.php';
+include 'Conection.php';
 session_start();
 if(isset($_SESSION['login'])){
     
@@ -37,6 +35,40 @@ echo true;
     }
 
 
-function teste(){
+function delete(){
+
+include 'conection.php';
+session_start();
+if(isset($_SESSION['login'])){  
+    
+$id_produto = $_POST['id'];
+
+$query = "DELETE FROM produto WHERE id_produto = $id_produto";
+
+mysqli_query($conexao, $query);
+
+echo true; 
+    
+}else{
+    echo false;
+}
+}
+
+function selectbyid(){
+    include 'Conection.php';
+    session_start();
+    if(isset($_SESSION['login'])){
+        $id_produto = $_POST['id_produto'];
+   //Consultando banco de dados
+    $qryLista = mysqli_query($conexao, "SELECT * FROM produto WHERE id_produto=$id_produto");    
+    while($resultado = mysqli_fetch_assoc($qryLista)){
+        $vetor[] = array_map('utf8_encode', $resultado); 
+    }    
+    //Passando vetor em forma de json
+    echo json_encode($vetor);
+    }
+}
+
+function edit(){
 
 }

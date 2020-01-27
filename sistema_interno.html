@@ -7,15 +7,18 @@
 
     <body>
         <div class="container" id="content">
-            <table class="table">
+            <table id="table" class="table">
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Codigo</th>
                         <th>Linha</th>
+                        <th>Operações</th>
                     </tr>
                 </thead>
                 <tbody id="tabela">
+                
+                </tbody>
                 </table>
 
                 <button type="button" id="addproduto" class="btn btn-dark">Adicionar</button>
@@ -38,7 +41,6 @@
             <a href="classes/logout.php" class="btn btn-primary">Logout</a>
         </div>
         
-
     </body>
 
      <footer>
@@ -73,8 +75,41 @@
 		success: function(dados){
 			for(var i=0;dados.length>i;i++){
 				//Adicionando registros retornados na tabela
-				$('#tabela').append('<tr><td>'+dados[i].id_produto+'</td><td>'+dados[i].codigo+'</td><td>'+dados[i].Linha+'</td></tr>');
+				$('#tabela').append(
+                    '<tr><td>'+dados[i].id_produto+
+                    '</td><td>'+dados[i].codigo+
+                    '</td><td>'+dados[i].Linha+
+                    '</td>'+
+                    '<td><button type="button" id='+dados[i].id_produto+' class="editar btn btn-dark">Editar</button>'+
+                    '<button type="button" id='+dados[i].id_produto+' class="excluir btn btn-danger ml-2">Excluir</button></td>'+
+                    '</tr>'); 
 			}
+            $(".excluir").click(function(e){
+                e.preventDefault();
+                var id = this.id;
+                $.ajax({			//Função AJAX
+                url:"classes/insert_product_bd.php",		//Arquivo php
+                type:"POST",				//Método de envio
+                data: "funcao=delete"+"&id="+id,	//Dados
+                   success: function (result){			//Sucesso no AJAX
+                            if(result==true){		
+                                alert('produto deletado com sucesso')			
+                                location.href='sistema_interno.html'	//Redireciona
+                            }else{
+                                console.log(result)
+                                //$('#errolog').show();		//Informa o erro
+                                alert('Erro ao deletar produto')
+                            }
+                        }
+            })
+            return false;	//Evita que a página seja atualizada       
+            });
+            $(".editar").click(function(e){
+                e.preventDefault();
+                var id = this.id;
+                location.href='edit_produto.html?id_produto='+id;
+                      
+            });     
 		}
 	});
     //habilitar adição
@@ -87,6 +122,10 @@
     $('#produto').hide()
     $('#addproduto').show()
     });
+    //excluir
+    $('#1').click(function(){
+            alert('excluido')
+        });
     //salvar produto
     $('#saveaddproduct').submit(function(){ 	//Ao submeter formulário
             var codigo=$('#codigo').val();	//Pega valor do campo email
@@ -98,7 +137,7 @@
                 data: "funcao=insert"+"&codigo="+codigo+"&linha="+linha,	//Dados
                    success: function (result){			//Sucesso no AJAX
                             if(result==true){		
-                                alert('produto adiconado co sucesso')			
+                                alert('produto adiconado com sucesso')			
                                 location.href='sistema_interno.html'	//Redireciona
                             }else{
                                 console.log(result)
@@ -109,9 +148,11 @@
             })
             return false;	//Evita que a página seja atualizada
         })
-
-
+        //excluir
+        
+ 
     });
+    
     carregaDocumento("header.html", "#header");
     carregaDocumento("footer.html", "#footer");
         //$("#header").load('header.html');
